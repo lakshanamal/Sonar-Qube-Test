@@ -1,17 +1,38 @@
-# Controls when the workflow will run
-on: push
-name: Main Workflow
+name: Build
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-  sonarQubeTrigger:
-    name: SonarQube Trigger
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: SonarQube Scan
-      uses: kitabisa/sonarqube-action@v1.1.0
-      with:
-        host: http://localhost:9000
-        login: admin
-        password: Lakshan@1997
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Cache SonarQube packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: f4131189dfb7da2030c3536152c426a5e93cfae2
+          SONAR_HOST_URL: http://localhost:9000
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
