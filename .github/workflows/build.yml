@@ -1,8 +1,11 @@
-name: Build
+name: Sonar qube test
 on:
   push:
     branches:
       - main
+      - development
+  pull_request:
+    branches:
       - development
 
 jobs:
