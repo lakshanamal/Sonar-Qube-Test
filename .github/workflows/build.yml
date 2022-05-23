@@ -31,7 +31,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=com.xventure.xapi.service:xapi-platform-service
+          SONAR_TOKEN: 977a35c45cfc7423b7459a9e8839b7da0dfbfc50
+          SONAR_HOST_URL:  https://sonarqube.xapihub.io/
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
