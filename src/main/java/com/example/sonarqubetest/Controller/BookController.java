@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
 
     @PostMapping
-    public String test() {
-        return "hello";
+    public void test() {
+        System.out.println("hello");
     }
 }
