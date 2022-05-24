@@ -8,7 +8,6 @@ public class BookController {
 
     @PostMapping
     public String test() {
-        System.out.println("hello");
         return "hello";
     }
 }
